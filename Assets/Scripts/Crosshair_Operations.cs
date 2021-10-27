@@ -23,7 +23,11 @@ public class Crosshair_Operations : MonoBehaviour
     }
     private void Lerp_Position()
     {
-        if(current_weapon == null) return;
+        if(current_weapon == null)
+        {
+            Lerp_To_Camera_Center(); 
+            return;
+        }
 
         Vector3 hit_point = current_weapon.Get_Hit_Point();
 
@@ -71,20 +75,6 @@ public class Crosshair_Operations : MonoBehaviour
             transform.rotation = Quaternion.identity;
         }
     }
-
-    private void Lerp_To_Default()
-    {
-        if (Lerping == false) return;
-
-        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, Time.deltaTime * speed);
-        image.color = Color.Lerp(image.color, Color.white, Time.deltaTime * speed);
-
-        if(Quaternion.Dot(transform.rotation, Quaternion.identity) >= 0.99f)
-        {
-            Lerping = false;
-        }
-    }
-
     private void Rotate()
     {
             image.color = Color.red;

@@ -7,12 +7,13 @@ public class Weapon_HUD : MonoBehaviour
 
     [SerializeField]private TextMeshProUGUI CurrentGun_Magazine_Hud;
 	[SerializeField]private Player_Gun_Inventory inventory;
+	[SerializeField]private Ammo[] ammo;
 	[SerializeField]private Weapon current_weapon;
 	[SerializeField]private float Animation_speed;
-	[SerializeField] private Vector3 scale_rate = new Vector3(0.01f, 0.01f, 0.01f);
-	[SerializeField] private float MAX_Scale = 1.5f;
-	[SerializeField] private float MIN_Scale = 1.0f;
-	[SerializeField] private string Gun_Text;
+	[SerializeField]private Vector3 scale_rate = new Vector3(0.01f, 0.01f, 0.01f);
+	[SerializeField]private float MAX_Scale = 1.5f;
+	[SerializeField]private float MIN_Scale = 1.0f;
+	[SerializeField]private string Gun_Text;
 	private void Awake()
 	{
 		inventory = GetComponent<Player_Gun_Inventory>();
@@ -26,7 +27,15 @@ public class Weapon_HUD : MonoBehaviour
     {
 		Update_HUD();
 	}
+	private void Glow_Ammo()
+    {
+		ammo = FindObjectsOfType<Ammo>();
 
+		for(int i=0;i<ammo.Length;i++)
+        {
+			ammo[i].Glow();
+        }
+    }
 	private void Update_Info()
     {
 		GameObject temp = inventory.GetCurrentWeapon();
@@ -57,6 +66,7 @@ public class Weapon_HUD : MonoBehaviour
 			if(Gun_Text != CurrentGun_Magazine_Hud.text && current_weapon.is_reloading == false)
             {
 				do_once = true;
+				Glow_Ammo();
 			}
 		}
 	}

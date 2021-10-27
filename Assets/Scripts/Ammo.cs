@@ -5,10 +5,14 @@ public class Ammo : MonoBehaviour
     public GameObject prefab;
     public Weapon intended_weapon;
 
+    [SerializeField]MeshRenderer[] ren;
+    [SerializeField]Material glow_Material;
     [SerializeField]private string for_the_gun = "Anaconda";
     [SerializeField]private uint Amount = 1;
-    [SerializeField] private uint Ammo_Percantage = 30;
+    [SerializeField]private uint Ammo_Percantage = 30;
     [SerializeField]private Player_Gun_Inventory pgi;
+    [SerializeField]private Material[] initial_Materials;
+    [SerializeField]private Material[] glow_materials;
 
     private static readonly string player_tag = "Player";
 
@@ -20,6 +24,37 @@ public class Ammo : MonoBehaviour
         for_the_gun = intended_weapon.gameObject.name;
         GameObject go = GameObject.FindGameObjectsWithTag(player_tag)[0];
         pgi = go.GetComponent<Player_Gun_Inventory>();
+        ren = GetComponentsInChildren<MeshRenderer>();
+        initial_Materials = ren[0].materials;
+    }
+
+    public void Glow()
+    {
+        GameObject go = pgi.GetCurrentWeapon();
+
+        if (go == null) return;
+
+        Weapon current = go.GetComponent<Weapon>();
+
+        uint absolute_max = current.max_carried_magazine + current.max_magazine_size;
+        uint current_ammo_count = current.carried_magazine_temp + current.magazine_count;
+        uint required = absolute_max - current_ammo_count;
+
+        if (required != 0)
+        {
+            for (int i=0;i< ren.Length;i++)
+            {
+                ren[i].materials = glow_materials;
+            }
+        }
+
+        else
+        {
+            for (int i = 0; i < ren.Length; i++)
+            {
+                ren[i].materials = initial_Materials;
+            }
+        }
     }
 
     private void OnCollisionStay(Collision other)

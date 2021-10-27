@@ -4,8 +4,9 @@ public class SimpleMovement : MonoBehaviour
 {
     private static SimpleMovement _instance;
     private Rigidbody rb;
+
     [SerializeField]private Transform cam;
-    private Vector3 initialScale;
+    [SerializeField]private Vector3 initialScale;
 
     [SerializeField]public bool Can_jump = false;
     [SerializeField]public bool Is_Moving = false;
@@ -18,6 +19,7 @@ public class SimpleMovement : MonoBehaviour
     [SerializeField]private float sensitivity;
     [SerializeField]private float headRotation = 90f;
     [SerializeField]private float headRotationLimit = 90f;
+    [SerializeField]private float crouch_speed = 10f;
     private static SimpleMovement Instance
     {
         get { return _instance; }
@@ -26,11 +28,11 @@ public class SimpleMovement : MonoBehaviour
     {
         rb = gameObject.GetComponent<Rigidbody>();
         cam = Camera.main.transform;
+        initialScale = transform.localScale;
+        cam.position = transform.position + new Vector3(0, (initialScale.y) / 2, 0);
     }
     private void Start()
     {
-        initialScale = transform.localScale;
-        cam.position = transform.position + new Vector3(0, (initialScale.y) / 2, 0);
         //cam.transform.parent = transform;
         temp_speed = speed;
         run_speed = speed * 2;
@@ -64,11 +66,11 @@ public class SimpleMovement : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.LeftControl))
         {
-            transform.localScale = Vector3.Lerp(transform.localScale, initialScale / 2, Time.fixedDeltaTime * 2);
+            transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(initialScale.x, (initialScale.y / 2), initialScale.z), Time.deltaTime * crouch_speed);
         }
         else
         {
-            transform.localScale = Vector3.Lerp(transform.localScale, initialScale, Time.fixedDeltaTime * 2);
+            transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(initialScale.x, initialScale.y, initialScale.z), Time.deltaTime * crouch_speed);
         }
     }
     private void MouseLook()
