@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class Ammo : MonoBehaviour
 {
+    public bool is9mm = false;
+
     public GameObject prefab;
     public Weapon intended_weapon;
 
@@ -26,13 +28,27 @@ public class Ammo : MonoBehaviour
         pgi = go.GetComponent<Player_Gun_Inventory>();
         ren = GetComponentsInChildren<MeshRenderer>();
         initial_Materials = ren[0].materials;
+        Material glow_material_temp = glow_materials[0];
+        glow_materials = init_glow_array(initial_Materials, glow_material_temp);
+    }
+
+    private Material[] init_glow_array(Material[] initial, Material glow_material)
+    {
+        Material[] glow = new Material[initial.Length];
+
+        for (int i=0;i< initial.Length;i++)
+        {
+            glow[i] = glow_material;
+        }
+
+        return glow;
     }
 
     public void Glow()
     {
         GameObject go = pgi.GetCurrentWeapon();
 
-        if (go == null) return;
+        if (go == null)  return;
 
         Weapon current = go.GetComponent<Weapon>();
 
@@ -42,7 +58,7 @@ public class Ammo : MonoBehaviour
 
         if (required != 0)
         {
-            for (int i=0;i< ren.Length;i++)
+            for (int i=0;i<ren.Length;i++)
             {
                 ren[i].materials = glow_materials;
             }
@@ -50,7 +66,7 @@ public class Ammo : MonoBehaviour
 
         else
         {
-            for (int i = 0; i < ren.Length; i++)
+            for (int i = 0; i<ren.Length; i++)
             {
                 ren[i].materials = initial_Materials;
             }

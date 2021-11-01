@@ -1,6 +1,5 @@
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEditor;
 
 public class Weapon : MonoBehaviour
 {
@@ -29,6 +28,7 @@ public class Weapon : MonoBehaviour
     public float current_fire_rate;
     public float temp_reload;
     public uint carried_magazine_temp;
+    public Ammo specified_ammo;
 
     private CameraShake camshake;
     private void Awake()
@@ -42,6 +42,7 @@ public class Weapon : MonoBehaviour
             Debug.LogError("Gun_Exit not set");
         }
 
+        specified_ammo = bullet_prefab.GetComponent<Ammo>();
         camshake = Camera.main.transform.parent.GetComponentInParent<CameraShake>();
     }
     private void Start()
@@ -57,6 +58,23 @@ public class Weapon : MonoBehaviour
         AutoReload();
         Reload_Timer();
         Get_Hit_Point();
+    }
+
+    public void Glow_Needed_Ammo()
+    {
+        if (is_Equipped == false) return;
+
+        Ammo[] ammo = FindObjectsOfType<Ammo>();
+
+        if (ammo == null) return;
+
+        for(int i=0;i<ammo.Length;i++)
+        {
+            if(ammo[i].gameObject.name.Contains(bullet_prefab.name))
+            {
+                ammo[i].Glow();
+            }
+        }
     }
 
     public Vector3 Get_Hit_Point()
@@ -96,7 +114,7 @@ public class Weapon : MonoBehaviour
                 Rigidbody rb = go.GetComponent<Rigidbody>();
                 rb.AddRelativeForce(Calculate_Shooting_Vector() * projectile_speed, ForceMode.Impulse);
                 magazine_count--;
-                camshake.InduceStress(1, 2, 1f);
+                camshake.InduceStress(1, 1, 1f);
                 Destroy(go, 10f);
             }
         }
@@ -109,10 +127,11 @@ public class Weapon : MonoBehaviour
                 Rigidbody rb = go.GetComponent<Rigidbody>();
                 rb.AddRelativeForce(Calculate_Shooting_Vector() * projectile_speed, ForceMode.Impulse);
                 magazine_count--;
-                camshake.InduceStress(1, 2, 1f);
+                camshake.InduceStress(1, 1, 1f);
                 Destroy(go, 10f);
             }
         }
+        Glow_Needed_Ammo();
     }
     public void Cancel_Reload()
     {

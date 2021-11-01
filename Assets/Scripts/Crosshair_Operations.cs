@@ -9,7 +9,6 @@ public class Crosshair_Operations : MonoBehaviour
     [SerializeField]private Vector3 Rotating_Vector = new Vector3(0, 0, 1f);
     [SerializeField]private Weapon current_weapon;
     [SerializeField]private Image image;
-    [SerializeField]private Vector3 center_of_the_screen;
     [SerializeField]private Camera cam;
     private void Awake()
     {
@@ -50,7 +49,7 @@ public class Crosshair_Operations : MonoBehaviour
     }
     private Vector3 Get_Camera_Center()
     {
-        return new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0);
+        return new Vector3(Screen.width / 2, Screen.height / 2, 0);
     }
     private void Reload_Animation()
     {
